@@ -26,6 +26,7 @@ void writeincome(struct node *ptr);
 void writeexpense(struct node *ptr);
 void deleterecord(struct node *ptr);
 void deleteIncomeRecord(int id);
+void deleteExpenseRecord(int id);
 struct node *readincome(struct node *ptr);
 struct node *readexpense(struct node *ptr);
 void write(struct record *point);
@@ -83,8 +84,8 @@ if will execute and take income and expense from file*/
     printf("ENTER THE OPTION FROM THE BELOW \n\n");
     printf("1.INSERT INCOME \n");
     printf("2.INSERT EXPENSE \n");
-    printf("3.VIEW INCOME RECORD \n");
-    printf("4.VIEW EXPENSE RECORD \n");
+    printf("3.VIEW INCOME RECORDS \n");
+    printf("4.VIEW EXPENSE RECORDS \n");
     printf("5.DELETE INCOME RECORD\n");
     printf("6.DELETE EXPENSE RECORD\n");
     printf("7.EXIT\n");
@@ -146,13 +147,19 @@ if will execute and take income and expense from file*/
     case 5:
       printf("*********   YOUR INCOME RECORDS ARE   *******\n\n");
       display(3);
-      printf("*********   PLEASE PROVIDE THE ID OF THE INCOME RECORD TO DELETE "
+      printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO DELETE "
              "  *******\n\n");
       scanf("%d", &value);
       deleteIncomeRecord(value);
       break;
     case 6:
-      printf("hello expense");
+      printf("*********   YOUR EXPENSE RECORDS ARE   *******\n\n");
+      display(4);
+      printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO DELETE "
+             "  *******\n\n");
+      scanf("%d", &value);
+      deleteExpenseRecord(value);
+      break;
     case 7:
       point = (struct record *)malloc(sizeof(struct record));
       point->x = currentincome;
@@ -286,9 +293,11 @@ void display(int a3) {
 
       //   expense=readexpense(expense);
       struct node *ptr2 = expense;
+      int i = 0;
       while (ptr2 != NULL) {
-        printf("Date: %s\nAmount: %.2lf TND\nCategory: %s\n\n", ptr2->date,
-               ptr2->amount, ptr2->category);
+        i++;
+        printf("ID: %d\nDate: %s\nAmount: %.2lf TND\nCategory: %s\n\n", i,
+               ptr2->date, ptr2->amount, ptr2->category);
         ptr2 = ptr2->next;
       }
       printf("_________________________________________________________________"
@@ -415,21 +424,55 @@ struct record *readrecord() {
 }
 
 void deleteIncomeRecord(int id) {
-  struct node *ptr1 = income;
-  struct node *ptr2 = NULL;
-  if (id == 1) {
-    ptr2 = ptr1;
-    ptr1 = ptr1->next;
-    free(ptr2);
-    income = ptr1;
-  } else {
-    for (int i = 1; i < id - 1; i++) {
-      ptr1 = ptr1->next;
+  struct node *ptr = income;
+  struct node *prev = NULL;
+  int i = 0;
+  while (ptr != NULL) {
+    i++;
+    if (i == id) {
+      if (prev == NULL) {
+        income = ptr->next;
+        currentincome = currentincome - ptr->amount;
+        free(ptr);
+        ptr = NULL;
+        break;
+      } else {
+        prev->next = ptr->next;
+        currentincome = currentincome - ptr->amount;
+        free(ptr);
+        ptr = NULL;
+        break;
+      }
     }
-    ptr2 = ptr1->next;
-    ptr1->next = ptr2->next;
-    free(ptr2);
+    prev = ptr;
+    ptr = ptr->next;
   }
-  currentincome = currentincome - ptr1->amount;
   writeincome(income);
+}
+
+void deleteExpenseRecord(int id) {
+  struct node *ptr = expense;
+  struct node *prev = NULL;
+  int i = 0;
+  while (ptr != NULL) {
+    i++;
+    if (i == id) {
+      if (prev == NULL) {
+        expense = ptr->next;
+        currentexpense = currentexpense - ptr->amount;
+        free(ptr);
+        ptr = NULL;
+        break;
+      } else {
+        prev->next = ptr->next;
+        currentexpense = currentexpense - ptr->amount;
+        free(ptr);
+        ptr = NULL;
+        break;
+      }
+    }
+    prev = ptr;
+    ptr = ptr->next;
+  }
+  writeexpense(expense);
 }
