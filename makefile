@@ -5,6 +5,7 @@ all: financial_management
 
 financial_management: main.c
 	$(CC) $(CFLAGS) $< -o $@
+	./financial_management
 
 reset:
 	rm -f financial_management
@@ -15,4 +16,4 @@ clean:
 run: financial_management
 	./financial_management
 
-.PHONY: all reset run reset
+.PHONY: all reset reset

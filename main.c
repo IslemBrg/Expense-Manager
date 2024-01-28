@@ -55,10 +55,9 @@ if will execute and take income and expense from file*/
       NULL) /*it means file is already created and some data is already
            there,and we have to get that and create linked list,address of first
            node will be in income pointer. step bcoz if we dont do this than
-             after closing terminal if we create inome and saved it than
-           previous data will be deletedand it overrtites in file...after doing
-           this income will point to first node and all data will be come in ram
-            in form linked list*/
+             after closing terminal if we create income and saved it than
+           previous data will be deleted and it overrides in file...after doing
+           this income will point to first node and all data will become in*/
   {
     income = readincome(income);
   }
@@ -81,7 +80,7 @@ if will execute and take income and expense from file*/
            currentincome - currentexpense);
     printf("                                          "
            "|_______________________________________________\n");
-    printf("ENTER THE OPTION FROM THE BELOW \n\n");
+    printf("ENTER AN OPTION FROM THE BELOW MENU \n\n");
     printf("1.INSERT INCOME \n");
     printf("2.INSERT EXPENSE \n");
     printf("3.VIEW INCOME RECORDS \n");
@@ -100,9 +99,9 @@ if will execute and take income and expense from file*/
                                      // working thats why these stepes have done
       strcpy(a, "");
       strcat(a, s1);
-      strcat(a, " ");
+      strcat(a, "-");
       strcat(a, s2);
-      strcat(a, " ");
+      strcat(a, "-");
       strcat(a, s3);
       printf("Enter The Amount\n");
       scanf("%lf", &b);
@@ -121,9 +120,9 @@ if will execute and take income and expense from file*/
       scanf("%s %s %s", s1, s2, s3);
       strcpy(a, "");
       strcat(a, s1);
-      strcat(a, " ");
+      strcat(a, "-");
       strcat(a, s2);
-      strcat(a, " ");
+      strcat(a, "-");
       strcat(a, s3);
 
       printf("Enter The Amount\n");
