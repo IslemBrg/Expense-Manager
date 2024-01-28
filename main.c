@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,14 +21,17 @@ void writeexpense(struct node *ptr);
 void deleterecords(struct node *ptr);
 void deleteIncomeRecord(int id);
 void deleteExpenseRecord(int id);
+void updateIncomeRecord(int id);
+void updateExpenseRecord(int id);
 struct node *readincome(struct node *ptr);
 struct node *readexpense(struct node *ptr);
-void write(struct record *point);
-struct record *readrecord();
 void verifyAndUpdateIncome();
 void verifyAndUpdateExpense();
+void credits();
 
 int main() {
+  system("clear");
+  credits();
   int option, value;
 
   double b;
@@ -58,7 +59,7 @@ int main() {
     verifyAndUpdateExpense();
 
     printf("                                           "
-           "|_______________________________________________\n  ");
+           " _______________________________________________\n  ");
     printf("                                         |     YOUR INCOME   =     "
            " %.2lf TND      \n ",
            currentincome);
@@ -80,7 +81,9 @@ int main() {
     printf("7.DELETE INCOME RECORD\n");
     printf("8.DELETE EXPENSE RECORD\n");
     printf("9.EXIT\n");
-    scanf("%d", &option);
+    printf("\n");
+    printf("OPTION: ");
+    scanf(" %d", &option);
     printf("\n\n\n");
 
     switch (option) {
@@ -174,7 +177,6 @@ int main() {
       break;
     }
   } while (option != 9);
-
   return 0;
 }
 
@@ -535,4 +537,19 @@ void verifyAndUpdateExpense() {
 
   // Update current expense variable
   currentexpense = totalExpense;
+}
+
+void credits() {
+  int terminalWidth = 80; // Replace with the actual width of your terminal
+
+  // Calculate the padding for centering the credits
+  int padding =
+      (terminalWidth - 39) / 2; // 39 is the width of the longest credit line
+
+  // Print the centered credits
+  printf("%*s*********   APPLICATION DEVELOPED BY   *******\n", padding, "");
+  printf("%*s*********   1. MOHAMED MAHDI CHIHAOUI  *******\n", padding, "");
+  printf("%*s*********   2. ISLEM BARGAOUI          *******\n", padding, "");
+  printf("%*s*********   3. OUMAIMA AYARI           *******\n\n\n", padding,
+         "");
 }
