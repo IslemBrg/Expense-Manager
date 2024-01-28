@@ -15,10 +15,6 @@ struct node {
   struct node *next;
 } *income = NULL, *expense = NULL;
 
-struct record {
-  double x, y;
-} *point = NULL;
-
 void create(char x[], double y, char z[], struct node **temp);
 void display(int a3);
 struct node *readnext(struct node *ptr, FILE *fpointer);
@@ -41,18 +37,6 @@ int main() {
   char c[N], a[M];
   char s1[15], s2[15], s3[15];
 
-  if (fopen("Record.bin", "rb") !=
-      NULL) /*first time it will give null bcoz there is no file name
-record.bin,therefor it will not take income and expense from file,assign value
-will be displayed i.e 0,0..after creating income and expense first time user
-exits then record.bin will be create and again  when user runs program then this
-if will execute and take income and expense from file*/
-  {
-    point = readrecord();
-    currentincome = point->x;
-    currentexpense = point->y;
-  }
-
   if (fopen("myincome.bin", "rb") !=
       NULL) /*it means file is already created and some data is already
            there,and we have to get that and create linked list,address of first
@@ -69,7 +53,8 @@ if will execute and take income and expense from file*/
 
   do {
 
-    verifyAndUpdateIncome(); // these functions are used to update total income and expense based on saved records
+    verifyAndUpdateIncome(); // these functions are used to update total income
+                             // and expense based on saved records
     verifyAndUpdateExpense();
 
     printf("                                           "
@@ -181,10 +166,8 @@ if will execute and take income and expense from file*/
       deleteExpenseRecord(value);
       break;
     case 9:
-      point = (struct record *)malloc(sizeof(struct record));
-      point->x = currentincome;
-      point->y = currentexpense;
-      write(point);
+      printf("*********   THANK YOU FOR USING OUR APPLICATION   "
+             "*******\n\n");
       break;
     default:
       printf("WRONG OPTION SELECTED -Enter Valid Option");
@@ -408,41 +391,6 @@ struct node *readexpense(struct node *ptr) {
   return ptr;
 }
 
-void write(struct record *point) {
-  FILE *fpointer;
-  fpointer = fopen("Record.bin", "wb");
-  if (fpointer != NULL) {
-
-    fseek(fpointer, 0, SEEK_END);
-    fwrite(point, sizeof(struct record), 1,
-           fpointer); /*everytime we write into file,it will overwrite the
-                         data..... whole data will be deleted and new data willl
-                         be written intofile*/
-  } else {
-    printf("FILEOPEN ERROR\n");
-  }
-  fclose(fpointer);
-  fpointer = NULL;
-}
-
-struct record *readrecord() {
-  FILE *fpointer;
-  fpointer = fopen("Record.bin", "rb");
-  struct record *ptr = NULL;
-
-  if (fpointer != NULL) {
-
-    fseek(fpointer, 0, SEEK_SET);
-
-    ptr = (struct record *)malloc(sizeof(struct record));
-    fread(ptr, sizeof(struct record), 1, fpointer);
-
-  } else {
-    printf("CANNOT OPEN FILE\n");
-  }
-  return ptr;
-}
-
 void deleteIncomeRecord(int id) {
   struct node *ptr = income;
   struct node *prev = NULL;
@@ -562,41 +510,29 @@ void updateExpenseRecord(int id) {
 }
 
 void verifyAndUpdateIncome() {
-    double totalIncome = 0.0;
+  double totalIncome = 0.0;
 
-    // Traverse the linked list of income records
-    struct node *ptr = income;
-    while (ptr != NULL) {
-        totalIncome += ptr->amount;
-        ptr = ptr->next;
-    }
+  // Traverse the linked list of income records
+  struct node *ptr = income;
+  while (ptr != NULL) {
+    totalIncome += ptr->amount;
+    ptr = ptr->next;
+  }
 
-    // Update current income variable
-    currentincome = totalIncome;
-
-    // Update the "Record.bin" file with the new total income
-    struct record *point = (struct record *)malloc(sizeof(struct record));
-    point->x = currentincome;
-    point->y = currentexpense;
-    write(point);
+  // Update current income variable
+  currentincome = totalIncome;
 }
 
 void verifyAndUpdateExpense() {
-    double totalExpense = 0.0;
+  double totalExpense = 0.0;
 
-    // Traverse the linked list of expense records
-    struct node *ptr = expense;
-    while (ptr != NULL) {
-        totalExpense += ptr->amount;
-        ptr = ptr->next;
-    }
+  // Traverse the linked list of expense records
+  struct node *ptr = expense;
+  while (ptr != NULL) {
+    totalExpense += ptr->amount;
+    ptr = ptr->next;
+  }
 
-    // Update current expense variable
-    currentexpense = totalExpense;
-
-    // Update the "Record.bin" file with the new total expense
-    struct record *point = (struct record *)malloc(sizeof(struct record));
-    point->x = currentincome;
-    point->y = currentexpense;
-    write(point);
+  // Update current expense variable
+  currentexpense = totalExpense;
 }

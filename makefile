@@ -5,7 +5,6 @@ all: financial_management
 
 financial_management: main.c
 	$(CC) $(CFLAGS) $< -o $@
-	./financial_management
 
 reset:
 	rm -f financial_management
