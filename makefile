@@ -6,10 +6,13 @@ all: financial_management
 financial_management: main.c
 	$(CC) $(CFLAGS) $< -o $@
 
+reset:
+	rm -f financial_management
+
 clean:
-	rm -f financial_management myincome.bin myexpense.bin Record.bin
+	rm -f myincome.bin myexpense.bin Record.bin
 
 run: financial_management
 	./financial_management
 
-.PHONY: all clean run
+.PHONY: all reset run reset
