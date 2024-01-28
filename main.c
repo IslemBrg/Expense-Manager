@@ -24,13 +24,15 @@ void display(int a3);
 struct node *readnext(struct node *ptr, FILE *fpointer);
 void writeincome(struct node *ptr);
 void writeexpense(struct node *ptr);
-void deleterecord(struct node *ptr);
+void deleterecords(struct node *ptr);
 void deleteIncomeRecord(int id);
 void deleteExpenseRecord(int id);
 struct node *readincome(struct node *ptr);
 struct node *readexpense(struct node *ptr);
 void write(struct record *point);
 struct record *readrecord();
+void verifyAndUpdateIncome();
+void verifyAndUpdateExpense();
 
 int main() {
   int option, value;
@@ -67,8 +69,11 @@ if will execute and take income and expense from file*/
 
   do {
 
+    verifyAndUpdateIncome(); // these functions are used to update total income and expense based on saved records
+    verifyAndUpdateExpense();
+
     printf("                                           "
-           "_______________________________________________\n  ");
+           "|_______________________________________________\n  ");
     printf("                                         |     YOUR INCOME   =     "
            " %.2lf TND      \n ",
            currentincome);
@@ -85,9 +90,11 @@ if will execute and take income and expense from file*/
     printf("2.INSERT EXPENSE \n");
     printf("3.VIEW INCOME RECORDS \n");
     printf("4.VIEW EXPENSE RECORDS \n");
-    printf("5.DELETE INCOME RECORD\n");
-    printf("6.DELETE EXPENSE RECORD\n");
-    printf("7.EXIT\n");
+    printf("5.UPDATE INCOME RECORD\n");
+    printf("6.UPDATE EXPENSE RECORD\n");
+    printf("7.DELETE INCOME RECORD\n");
+    printf("8.DELETE EXPENSE RECORD\n");
+    printf("9.EXIT\n");
     scanf("%d", &option);
     printf("\n\n\n");
 
@@ -108,7 +115,6 @@ if will execute and take income and expense from file*/
       printf("Enter the Category\n");
       scanf("%s", c);
 
-      currentincome = currentincome + b;
       create(a, b, c, &income);
       writeincome(income);
 
@@ -130,7 +136,6 @@ if will execute and take income and expense from file*/
       printf("Enter The Category\n");
       scanf("%s", c);
 
-      currentexpense = currentexpense + b;
       create(a, b, c, &expense);
       writeexpense(expense);
 
@@ -146,12 +151,28 @@ if will execute and take income and expense from file*/
     case 5:
       printf("*********   YOUR INCOME RECORDS ARE   *******\n\n");
       display(3);
+      printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO UPDATE "
+             "  *******\n\n");
+      scanf("%d", &value);
+      updateIncomeRecord(value);
+      break;
+    case 6:
+      printf("*********   YOUR EXPENSE RECORDS ARE   *******\n\n");
+      display(4);
+      printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO UPDATE "
+             "  *******\n\n");
+      scanf("%d", &value);
+
+      break;
+    case 7:
+      printf("*********   YOUR INCOME RECORDS ARE   *******\n\n");
+      display(3);
       printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO DELETE "
              "  *******\n\n");
       scanf("%d", &value);
       deleteIncomeRecord(value);
       break;
-    case 6:
+    case 8:
       printf("*********   YOUR EXPENSE RECORDS ARE   *******\n\n");
       display(4);
       printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO DELETE "
@@ -159,7 +180,7 @@ if will execute and take income and expense from file*/
       scanf("%d", &value);
       deleteExpenseRecord(value);
       break;
-    case 7:
+    case 9:
       point = (struct record *)malloc(sizeof(struct record));
       point->x = currentincome;
       point->y = currentexpense;
@@ -169,7 +190,7 @@ if will execute and take income and expense from file*/
       printf("WRONG OPTION SELECTED -Enter Valid Option");
       break;
     }
-  } while (option != 7);
+  } while (option != 9);
 
   return 0;
 }
@@ -199,7 +220,7 @@ void create(char x[], double y, char z[],
   }
 }
 
-void deleterecord(struct node *ptr) {
+void deleterecords(struct node *ptr) {
   struct node *freeme = ptr;
   struct node *holdme = NULL;
   while (freeme != NULL) {
@@ -232,7 +253,7 @@ struct node *readincome(struct node *ptr) {
   FILE *fpointer;
   fpointer = fopen("myincome.bin", "rb");
   if (fpointer != NULL) {
-    deleterecord(ptr);
+    deleterecords(ptr);
     ptr = NULL;
     fseek(fpointer, 0, SEEK_END);
     long filesize = ftell(fpointer);
@@ -371,7 +392,7 @@ struct node *readexpense(struct node *ptr) {
   FILE *fpointer;
   fpointer = fopen("myexpense.bin", "rb");
   if (fpointer != NULL) {
-    deleterecord(ptr);
+    deleterecords(ptr);
     ptr = NULL;
     fseek(fpointer, 0, SEEK_END);
     long filesize = ftell(fpointer);
@@ -431,13 +452,11 @@ void deleteIncomeRecord(int id) {
     if (i == id) {
       if (prev == NULL) {
         income = ptr->next;
-        currentincome = currentincome - ptr->amount;
         free(ptr);
         ptr = NULL;
         break;
       } else {
         prev->next = ptr->next;
-        currentincome = currentincome - ptr->amount;
         free(ptr);
         ptr = NULL;
         break;
@@ -458,13 +477,11 @@ void deleteExpenseRecord(int id) {
     if (i == id) {
       if (prev == NULL) {
         expense = ptr->next;
-        currentexpense = currentexpense - ptr->amount;
         free(ptr);
         ptr = NULL;
         break;
       } else {
         prev->next = ptr->next;
-        currentexpense = currentexpense - ptr->amount;
         free(ptr);
         ptr = NULL;
         break;
@@ -474,4 +491,112 @@ void deleteExpenseRecord(int id) {
     ptr = ptr->next;
   }
   writeexpense(expense);
+}
+
+void updateIncomeRecord(int id) {
+  struct node *ptr = income;
+  int i = 0;
+  char s1[15], s2[15], s3[15];
+
+  while (ptr != NULL) {
+    i++;
+    if (i == id) {
+      // Update the details of the income record
+      printf("Enter the updated Date (e.g., day month year): ");
+      scanf("%s %s %s", s1, s2, s3); // gets,fgets and other functions are not
+                                     // working thats why these stepes have done
+      strcpy(ptr->date, "");
+      strcat(ptr->date, s1);
+      strcat(ptr->date, "-");
+      strcat(ptr->date, s2);
+      strcat(ptr->date, "-");
+      strcat(ptr->date, s3);
+
+      printf("Enter the updated Amount: ");
+      scanf("%lf", &ptr->amount); // Update amount
+
+      printf("Enter the updated Category: ");
+      scanf("%s", ptr->category); // Update category
+
+      // Display success message
+      printf("Income record with ID %d updated successfully.\n", id);
+      writeincome(income); // Save the updated records to the file
+      return;
+    }
+
+    ptr = ptr->next;
+  }
+
+  // If the ID is not found
+  printf("Income record with ID %d not found.\n", id);
+}
+
+void updateExpenseRecord(int id) {
+  struct node *ptr = expense;
+  int i = 0;
+
+  while (ptr != NULL) {
+    i++;
+    if (i == id) {
+      // Update the details of the expense record
+      printf("Enter the updated Date (e.g., day month year): ");
+      scanf("%s %s %s", ptr->date, ptr->date + 3, ptr->date + 8); // Update date
+
+      printf("Enter the updated Amount: ");
+      scanf("%lf", &ptr->amount); // Update amount
+
+      printf("Enter the updated Category: ");
+      scanf("%s", ptr->category); // Update category
+
+      // Display success message
+      printf("Expense record with ID %d updated successfully.\n", id);
+      writeexpense(expense); // Save the updated records to the file
+      return;
+    }
+
+    ptr = ptr->next;
+  }
+
+  // If the ID is not found
+  printf("Expense record with ID %d not found.\n", id);
+}
+
+void verifyAndUpdateIncome() {
+    double totalIncome = 0.0;
+
+    // Traverse the linked list of income records
+    struct node *ptr = income;
+    while (ptr != NULL) {
+        totalIncome += ptr->amount;
+        ptr = ptr->next;
+    }
+
+    // Update current income variable
+    currentincome = totalIncome;
+
+    // Update the "Record.bin" file with the new total income
+    struct record *point = (struct record *)malloc(sizeof(struct record));
+    point->x = currentincome;
+    point->y = currentexpense;
+    write(point);
+}
+
+void verifyAndUpdateExpense() {
+    double totalExpense = 0.0;
+
+    // Traverse the linked list of expense records
+    struct node *ptr = expense;
+    while (ptr != NULL) {
+        totalExpense += ptr->amount;
+        ptr = ptr->next;
+    }
+
+    // Update current expense variable
+    currentexpense = totalExpense;
+
+    // Update the "Record.bin" file with the new total expense
+    struct record *point = (struct record *)malloc(sizeof(struct record));
+    point->x = currentincome;
+    point->y = currentexpense;
+    write(point);
 }
