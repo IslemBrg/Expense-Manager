@@ -39,12 +39,7 @@ int main() {
   char s1[15], s2[15], s3[15];
 
   if (fopen("myincome.bin", "rb") !=
-      NULL) /*it means file is already created and some data is already
-           there,and we have to get that and create linked list,address of first
-           node will be in income pointer. step bcoz if we dont do this than
-             after closing terminal if we create income and saved it than
-           previous data will be deleted and it overrides in file...after doing
-           this income will point to first node and all data will become in*/
+      NULL)
   {
     income = readincome(income);
   }
@@ -54,8 +49,7 @@ int main() {
 
   do {
 
-    verifyAndUpdateIncome(); // these functions are used to update total income
-                             // and expense based on saved records
+    verifyAndUpdateIncome(); 
     verifyAndUpdateExpense();
 
     printf("                                           "
@@ -90,8 +84,7 @@ int main() {
     case 1:
       printf("**************   ADD INCOME   *****************\n\n");
       printf("Enter The Date(e.g day month year)\n");
-      scanf("%s %s %s", s1, s2, s3); // gets,fgets and other functions are not
-                                     // working thats why these stepes have done
+      scanf("%s %s %s", s1, s2, s3); 
       strcpy(a, "");
       strcat(a, s1);
       strcat(a, "-");
@@ -181,8 +174,7 @@ int main() {
 }
 
 void create(char x[], double y, char z[],
-            struct node **temp) /* it isokay to write *temp if we pass only
-                                   income rather than &income*/
+            struct node **temp)
 {
   struct node *newnode, *ptr;
   newnode = (struct node *)malloc(sizeof(struct node));
@@ -255,13 +247,11 @@ struct node *readincome(struct node *ptr) {
 }
 
 void display(int a3) {
-  if (a3 == 3) // if case 3 is executed,we have to print income record
+  if (a3 == 3)
   {
 
     if (fopen("myincome.bin", "rb") ==
-        NULL) /*if user try to view record when there is no any record,i.e when
-                user runs program first time and wants to view record i.e there
-                is no any file created yet as myincome.bin,then it will =NULL */
+        NULL) 
 
     {
       printf("NO RECORDS AVAILABLE\n\n");
@@ -282,13 +272,11 @@ void display(int a3) {
              "_______________________________________________\n\n");
     }
   } else if (a3 ==
-             4) // if case 4 is executed then we have to print expenese record
+             4)
   {
 
     if (fopen("myexpense.bin", "rb") ==
-        NULL) /*if user try to view record when there is no any record,i.e when
-               user runs program first time and wants to view record i.e there
-               is no any file created yet as myexpense.bin,then it will =NULL */
+        NULL)
 
     {
       printf("NO RECORDS AVAILABLE\n\n");
@@ -322,9 +310,7 @@ void writeincome(struct node *ptr) {
       ptr1->next = NULL;
       fseek(fpointer, 0, SEEK_END);
       fwrite(ptr1, sizeof(struct node), 1,
-             fpointer); /*everytime we write into file,it will overwrite the
-                           data...... whole data will be deleted and new data
-                           willl be written intofile*/
+             fpointer); 
       ptr1->next = holdnext;
       holdnext = NULL;
       ptr1 = ptr1->next;
@@ -353,9 +339,7 @@ void writeexpense(struct node *ptr) {
       ptr1->next = NULL;
       fseek(fpointer, 0, SEEK_END);
       fwrite(ptr1, sizeof(struct node), 1,
-             fpointer); /*everytime we write into file,it will overwrite the
-                           data..... whole data will be deleted and new data
-                           willl be written intofile*/
+             fpointer); 
       ptr1->next = holdnext;
       holdnext = NULL;
       ptr1 = ptr1->next;
@@ -451,10 +435,8 @@ void updateIncomeRecord(int id) {
   while (ptr != NULL) {
     i++;
     if (i == id) {
-      // Update the details of the income record
       printf("Enter the updated Date (e.g., day month year): ");
-      scanf("%s %s %s", s1, s2, s3); // gets,fgets and other functions are not
-                                     // working thats why these stepes have done
+      scanf("%s %s %s", s1, s2, s3); 
       strcpy(ptr->date, "");
       strcat(ptr->date, s1);
       strcat(ptr->date, "-");
@@ -463,21 +445,20 @@ void updateIncomeRecord(int id) {
       strcat(ptr->date, s3);
 
       printf("Enter the updated Amount: ");
-      scanf("%lf", &ptr->amount); // Update amount
+      scanf("%lf", &ptr->amount);
 
       printf("Enter the updated Category: ");
-      scanf("%s", ptr->category); // Update category
+      scanf("%s", ptr->category);
 
-      // Display success message
       printf("Income record with ID %d updated successfully.\n", id);
-      writeincome(income); // Save the updated records to the file
+      writeincome(income);
       return;
     }
 
     ptr = ptr->next;
   }
 
-  // If the ID is not found
+  
   printf("Income record with ID %d not found.\n", id);
 }
 
@@ -488,65 +469,58 @@ void updateExpenseRecord(int id) {
   while (ptr != NULL) {
     i++;
     if (i == id) {
-      // Update the details of the expense record
+      
       printf("Enter the updated Date (e.g., day month year): ");
-      scanf("%s %s %s", ptr->date, ptr->date + 3, ptr->date + 8); // Update date
+      scanf("%s %s %s", ptr->date, ptr->date + 3, ptr->date + 8);
 
       printf("Enter the updated Amount: ");
-      scanf("%lf", &ptr->amount); // Update amount
+      scanf("%lf", &ptr->amount);
 
       printf("Enter the updated Category: ");
-      scanf("%s", ptr->category); // Update category
+      scanf("%s", ptr->category);
 
-      // Display success message
+
       printf("Expense record with ID %d updated successfully.\n", id);
-      writeexpense(expense); // Save the updated records to the file
+      writeexpense(expense);
       return;
     }
 
     ptr = ptr->next;
   }
 
-  // If the ID is not found
   printf("Expense record with ID %d not found.\n", id);
 }
 
 void verifyAndUpdateIncome() {
   double totalIncome = 0.0;
 
-  // Traverse the linked list of income records
   struct node *ptr = income;
   while (ptr != NULL) {
     totalIncome += ptr->amount;
     ptr = ptr->next;
   }
 
-  // Update current income variable
   currentincome = totalIncome;
 }
 
 void verifyAndUpdateExpense() {
   double totalExpense = 0.0;
 
-  // Traverse the linked list of expense records
   struct node *ptr = expense;
   while (ptr != NULL) {
     totalExpense += ptr->amount;
     ptr = ptr->next;
   }
 
-  // Update current expense variable
   currentexpense = totalExpense;
 }
 
 void credits() {
-  int terminalWidth = 80; // Replace with the actual width of your terminal
+  int terminalWidth = 80;
 
-  // Calculate the padding for centering the credits
   int padding =
-      (terminalWidth - 39) / 2; // 39 is the width of the longest credit line
+      (terminalWidth - 39) / 2;
 
-  // Print the centered credits
   printf("%*s*********   APPLICATION DEVELOPED BY   *******\n", padding, "");
   printf("%*s*********   1. MOHAMED MAHDI CHIHAOUI  *******\n", padding, "");
   printf("%*s*********   2. ISLEM BARGAOUI          *******\n", padding, "");
