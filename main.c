@@ -143,7 +143,7 @@ int main() {
       printf("*********   PLEASE PROVIDE THE ID OF THE RECORD TO UPDATE "
              "  *******\n\n");
       scanf("%d", &value);
-
+      updateExpenseRecord(value);
       break;
     case 7:
       printf("*********   YOUR INCOME RECORDS ARE   *******\n\n");
